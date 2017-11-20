@@ -1,5 +1,10 @@
-source 'https://rubygems.org'
-ruby '2.3.1'
+ruby '2.4.2'
 
-gem 'sinatra'
-gem 'puma'
+source 'https://rubygems.org' do
+  gem 'dotenv', groups: %i[development test]
+
+  gem 'puma'
+
+  gem 'sinatra'
+  gem 'nokogiri'
+end
