@@ -8,6 +8,9 @@ configure { set :server, :puma }
 get '/' do
   content_type 'application/rss+xml; charset=utf-8'
 
+  # Cache for 24 hours at a time.
+  response.headers['Cache-Control'] = 'public, max-age=86400'
+
   uri = URI('https://player.fm/mikerogers0/play-later.rss')
   req = Net::HTTP::Get.new(uri)
   req['Cookie'] = ENV['PLAYERFM_COOKIE']
