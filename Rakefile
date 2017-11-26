@@ -15,18 +15,13 @@ namespace :cdn do
       compress: true
     })
 
-    Cloudflair.configure do |config|
-      config.cloudflare.auth.key = ENV['CLOUDFLARE_KEY']
-      config.cloudflare.auth.email = ENV['CLOUDFLARE_EMAIL']
-    end
-
     feeds = PlayerFM.all
 
     items_count = feeds.xpath('rss//item//title').count
     first_item_title = feeds.xpath('rss//item//title').first.inner_text
 
     # Set something easy to compare again in memcache.
-    current_response = "#{items_count} - #{first_item_title}"
+    current_response = "#{items_count} -|- #{first_item_title}"
 
     # Get the current cache value and set the current one.
     cached_response = cache.get('player_keys', 3_600) || current_response
@@ -35,9 +30,15 @@ namespace :cdn do
     # If the feed has updated, clear the CDN.
     if cached_response != current_response
       puts 'Clearing podcast zone'
-      Cloudflair.zone(ENV['CLOUDFLARE_ZONE_ID']).purge_cache.selective({
-        files: ['https://podcasts.mikerogers.io/']
-      }).inspect
+
+      cloudfront = Aws::CloudFront::Client.new(region: 'us-east-1', access_key_id: ENV['AWS_ACCESS_KEY_ID'], secret_access_key: ENV['AWS_SECRET_ACCESS_KEY'])
+      cloudfront.create_invalidation(distribution_id: ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'], invalidation_batch: {
+        paths: {
+          quantity: 1,
+          items: ['/*'],
+        },
+        caller_reference: Time.now.to_s
+      })
     else
       puts 'No worries'
     end

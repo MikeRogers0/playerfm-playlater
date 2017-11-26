@@ -10,6 +10,5 @@ source 'https://rubygems.org' do
   gem 'sinatra'
   gem 'nokogiri'
   gem 'dalli'
-  gem 'cloudflair'
-  gem 'faraday', '>=0.13', '<0.14'
+  gem 'aws-sdk-cloudfront'
 end
