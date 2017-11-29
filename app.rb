@@ -7,8 +7,8 @@ configure { set :server, :puma }
 get '/' do
   content_type 'application/rss+xml; charset=utf-8'
 
-  # Cache for 24 hours
-  cache_control :public, max_age: 86400
+  # Cache for 1 hour
+  cache_control :public, max_age: 360
 
   feeds = PlayerFM.all
 
