@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'dotenv/load'
+#require 'dotenv/load'
 Bundler.require :default, (ENV['RACK_ENV'] || 'development').to_sym
 require './lib/player_fm'
 
