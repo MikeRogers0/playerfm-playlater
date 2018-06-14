@@ -1,5 +1,5 @@
 require 'rubygems'
-#require 'dotenv/load'
+require 'dotenv/load'
 Bundler.require :default, (ENV['RACK_ENV'] || 'development').to_sym
 require './lib/player_fm'
 
@@ -16,6 +16,14 @@ namespace :cdn do
     })
 
     feeds = PlayerFM.all
+
+    if feeds.text.include?('Internal Server Error')
+      puts 'Player.FM is down - try again later.'
+      return
+    elsif feeds.text.include?('Error type ID')
+      puts 'Player.FM has logged me out.'
+      return
+    end
 
     items_count = feeds.xpath('rss//item//title').count
     first_item_title = feeds.xpath('rss//item//title').first.inner_text
