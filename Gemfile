@@ -19,5 +19,6 @@ source 'https://rubygems.org' do
     gem 'capistrano-rbenv', '~> 2.1'
     gem 'capistrano-yarn'
     gem 'capistrano3-puma'
+    gem 'capistrano-logrotate'
   end
 end
