@@ -25,14 +25,5 @@ get '/' do
   feeds.xpath('rss//channel//image//title').first.inner_html = 'Podcast Queue - Mike Rogers'
   feeds.xpath('rss//channel//image//link').first.inner_html = 'https://podcasts.mikerogers.io/'
 
-  # Reset old podcast dates to be just a week ago, so they appear in the list
-  feeds.xpath('rss//item//pubDate').each do |pub_date|
-    time = Time.parse(pub_date.inner_html)
-
-    if time < (Time.now - (60 * 60 * 24 * 14))
-      pub_date.inner_html = (Time.now - (60 * 60 * 24 * 14)).to_s
-    end
-  end
-
   feeds.to_xml
 end
